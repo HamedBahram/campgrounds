@@ -1,6 +1,6 @@
 <%- include('../partials/_header') %>
 
-    <main>
+    <main class="container">
         <form action="/campgrounds/<%= camp._id %>?_method=PATCH" method="POST">
             <div>
                 <input type="text" name="campground[title]" placeholder="title" value="<%= camp.title %>">
