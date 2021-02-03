@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Campground</title>
+</head>
+<body>
+    <form action="/campgrounds/<%= camp._id %>?_method=PATCH" method="POST">
+        <div>
+            <input type="text" name="campground[title]" placeholder="title" value="<%= camp.title %>">
+        </div>
+        <div>
+            <input type="text" name="campground[location]" placeholder="location" value="<%= camp.location %>">
+        </div>
+        <button type="submit">Update Campground</button>
+    </form>
+    <footer>
+        <a href="/campgrounds/<%= camp._id %>">Cancel</a>
+    </footer>
+</body>
+</html>
