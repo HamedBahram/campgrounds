@@ -1,16 +1,41 @@
 <%- include('../partials/_header') %>
 
     <main class="container">
-        <form action="/campgrounds/<%= camp._id %>?_method=PATCH" method="POST">
-            <div>
-                <input type="text" name="campground[title]" placeholder="title" value="<%= camp.title %>">
+        <div class="row">
+            <h1 class="text-center mb-4">Edit Camp</h1>
+            <div class="col-6 offset-3">
+                <form class="needs-validation" action="/campgrounds/<%= camp._id %>?_method=PATCH" method="POST" novalidate>
+                    <div class="mb-2">
+                        <input class="form-control" type="text" name="campground[title]" placeholder="Add a title" value="<%= camp.title %>" required>
+                        <div class="valid-feedback">Looks good!</div>
+                        <div class="invalid-feedback">Please add a title.</div>
+                    </div>
+                    <div class="mb-2">
+                        <input class="form-control" type="text" name="campground[location]" placeholder="Location" value="<%= camp.location %>" required>
+                        <div class="valid-feedback">Looks good!</div>
+                        <div class="invalid-feedback">Please provide the location.</div>
+                    </div>
+                    <div class="input-group mb-2">
+                        <span class="input-group-text">$</span>
+                        <input type="text" class="form-control" name="campground[price]" placeholder="Price" value="<%= camp.price %>" required>
+                        <div class="valid-feedback">Looks good!</div>
+                        <div class="invalid-feedback">Please add a price.</div>
+                      </div>
+                    <div class="mb-2">
+                        <input class="form-control" type="text" name="campground[image]" placeholder="Image URL" value="<%= camp.image %>" required>
+                        <div class="valid-feedback">Looks good!</div>
+                        <div class="invalid-feedback">Please provide an image URL.</div>
+                    </div>
+                    <div class="mb-4">
+                        <textarea class="form-control" name="campground[description]" placeholder="Description" cols="30" rows="10" required><%= camp.description %></textarea>
+                        <div class="valid-feedback">Looks good!</div>
+                        <div class="invalid-feedback">Please add a description.</div>
+                    </div>
+                    <button class="btn btn-success mb-2" type="submit">Update Camp</button>
+                </form>
+                <a class="btn btn-light" href="/campgrounds/<%= camp._id %>">Cancel</a>
             </div>
-            <div>
-                <input type="text" name="campground[location]" placeholder="location" value="<%= camp.location %>">
-            </div>
-            <button type="submit">Update Campground</button>
-        </form>
-        <a href="/campgrounds/<%= camp._id %>">Cancel</a>
+        </div>
     </main>
 
 <%- include('../partials/_footer') %>
