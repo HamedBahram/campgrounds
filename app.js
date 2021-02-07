@@ -3,6 +3,7 @@ const path = require('path')
 const methodOverride = require('method-override')
 const AppError = require('./utils/AppError')
 const mongoose = require('mongoose')
+const session = require('express-session')
 const morgan = require('morgan')
 const campgrounds = require('./routes/campgrounds')
 const reviews = require('./routes/reviews')
@@ -30,6 +31,18 @@ app.use(express.static(path.join(__dirname, 'public')))
 app.use(express.urlencoded({ extended: true }))
 app.use(methodOverride('_method'))
 process.env.NODE_ENV !== 'production' && app.use(morgan('dev'))
+
+const sessionConfig = {
+    secret: 'secret',
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+        maxAge: 1000 * 60 * 60 * 24 * 7,
+        sameSite: 'strict',
+    },
+}
+if (app.get('env') === 'production') sessionConfig.cookie.secure = true
+app.use(session(sessionConfig))
 
 // Routes
 app.get('/', (req, res) => res.render('home'))
