@@ -1,3 +1,5 @@
 {
-    "rest-client.fontSize": 10
+    "rest-client.fontSize": 10,
+    "prettier.printWidth": 200,
+    "prettier.tabWidth": 4
 }

@@ -1,27 +1,55 @@
 <%- include('../partials/_header') %>
 
-    <main class="container">
-        <div class="row">
-            <div class="col-6 offset-3">
-                <div class="card">
-                    <img src="<%= camp.image %>" class="card-img-top" alt="...">
-                    <div class="card-body">
-                      <h5 class="card-title"><%= camp.title %></h5>
-                      <p class="card-text"><%= camp.description %></p>
-                    </div>
-                    <ul class="list-group list-group-flush">
-                      <li class="list-group-item text-muted"><%= camp.location %></li>
-                      <li class="list-group-item">$<%= camp.price %> /night</li>
-                    </ul>
-                    <div class="card-body">
-                      <a class="card-link btn btn-success" href="/campgrounds/<%= camp._id %>/edit">Edit Camp</a>
-                      <form class="d-inline" action="/campgrounds/<%= camp._id %>?_method=DELETE" method="POST">
-                        <button class="btn btn-danger" type="submit">Delete Camp</button>
-                      </form>
-                    </div>
-                  </div>
+<main class="container">
+    <div class="row">
+        <div class="col-6">
+            <div class="card mb-4">
+                <img src="<%= camp.image %>" class="card-img-top" alt="..." />
+                <div class="card-body">
+                    <h5 class="card-title"><%= camp.title %></h5>
+                    <p class="card-text"><%= camp.description %></p>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item text-muted"><%= camp.location %></li>
+                    <li class="list-group-item">$<%= camp.price %> /night</li>
+                </ul>
+                <div class="card-body">
+                    <a class="card-link btn btn-outline-success" href="/campgrounds/<%= camp._id %>/edit">Edit Camp</a>
+                    <form class="d-inline" action="/campgrounds/<%= camp._id %>?_method=DELETE" method="POST">
+                        <button class="btn btn-outline-danger" type="submit">Delete Camp</button>
+                    </form>
+                </div>
+                <div class="card-footer text-muted">2 days ago</div>
             </div>
         </div>
-    </main>
+        <div class="col-6">
+            <h3>Leave a review</h3>
+            <form class="needs-validation mb-4" action="/campgrounds/<%= camp._id %>/reviews" method="POST" novalidate>
+                <div class="mb-2">
+                    <label class="form-label" for="rating">Rating (1 to 5)</label>
+                    <input class="form-range" type="range" name="review[rating]" min="1" max="5" id="rating" />
+                </div>
+                <div class="mb-2">
+                    <textarea class="form-control" name="review[body]" id="body" cols="30" rows="3" placeholder="What do you think of this campsite?" required></textarea>
+                    <div class="valid-feedback">Looks good!</div>
+                    <div class="invalid-feedback">Please add some details.</div>
+                </div>
+                <button class="btn btn-success">Submit</button>
+            </form>
+            <h4 class="text-muted">Past reviews</h4>
+            <% camp.reviews.forEach(review => { %>
+            <div class="card mb-2">
+                <div class="card-body">
+                    <h5 class="card-title">Rating: <%= review.rating %></h5>
+                    <p class="card-text">Review: <%= review.body %></p>
+                    <form action="/campgrounds/<%= camp._id %>/reviews/<%= review._id %>?_method=DELETE" method="POST">
+                        <button class="btn btn-outline-danger btn-sm">Delete</button>
+                    </form>
+                </div>
+            </div>
+            <% }) %>
+        </div>
+    </div>
+</main>
 
 <%- include('../partials/_footer') %>
