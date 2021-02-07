@@ -4,6 +4,7 @@ const methodOverride = require('method-override')
 const AppError = require('./utils/AppError')
 const mongoose = require('mongoose')
 const session = require('express-session')
+const flash = require('connect-flash')
 const morgan = require('morgan')
 const campgrounds = require('./routes/campgrounds')
 const reviews = require('./routes/reviews')
@@ -43,6 +44,14 @@ const sessionConfig = {
 }
 if (app.get('env') === 'production') sessionConfig.cookie.secure = true
 app.use(session(sessionConfig))
+app.use(flash())
+
+// flash messages
+app.use((req, res, next) => {
+    res.locals.success = req.flash('success')
+    res.locals.error = req.flash('error')
+    next()
+})
 
 // Routes
 app.get('/', (req, res) => res.render('home'))
