@@ -1,0 +1,30 @@
+<%- include('../partials/_header') %>
+
+<main class="container">
+    <div class="row">
+        <h1 class="text-center mb-4">Login</h1>
+        <div class="col-6 mx-auto">
+            <%- include('../partials/_flash') %>
+            <form class="needs-validation mb-4" action="/login" method="POST" novalidate>
+                <div class="mb-2">
+                    <input class="form-control" type="email" name="email" placeholder="Email" required>
+                    <div class="valid-feedback">Looks good!</div>
+                    <div class="invalid-feedback">Email is required</div>
+                </div>
+                <div class="mb-2">
+                    <input class="form-control" type="password" name="password" placeholder="Password" required>
+                    <div class="valid-feedback">Looks good!</div>
+                    <div class="invalid-feedback">Password is required</div>
+                </div>
+                <div class="d-grid gap-2">
+                    <button class="btn btn-outline-info" type="submit">Login</button>
+                </div>
+            </form>
+            <p class="my-0">Don't have an account? <a class="link-success" href="/register">Join now</a></p>
+            <a class="link-info text-decoration-none" href="#">Forgot your password?</a>
+        </div>
+    </div>
+
+</main>
+
+<%- include('../partials/_footer') %>

@@ -3,7 +3,7 @@
     <main class="container">
         <div class="row">
             <h1 class="text-center mb-4">Edit Camp</h1>
-            <div class="col-6 offset-3">
+            <div class="col-6 mx-auto">
                 <form class="needs-validation" action="/campgrounds/<%= camp._id %>?_method=PATCH" method="POST" novalidate>
                     <div class="mb-2">
                         <input class="form-control" type="text" name="campground[title]" placeholder="Add a title" value="<%= camp.title %>" required>

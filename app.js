@@ -1,19 +1,29 @@
+require('dotenv').config()
 const express = require('express')
 const path = require('path')
 const methodOverride = require('method-override')
 const AppError = require('./utils/AppError')
 const mongoose = require('mongoose')
 const session = require('express-session')
+const MongoStore = require('connect-mongo')(session)
 const flash = require('connect-flash')
 const morgan = require('morgan')
-const campgrounds = require('./routes/campgrounds')
-const reviews = require('./routes/reviews')
+const passport = require('passport')
+const LocalStrategy = require('passport-local')
+const bcrypt = require('bcrypt')
+const User = require('./models/user')
+const campgroundsRouter = require('./routes/campgrounds')
+const reviewsRouter = require('./routes/reviews')
+const usersRouter = require('./routes/users')
+const sgMail = require('@sendgrid/mail')
+sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 
 // Initialize app
 const app = express()
 
 // Database
-mongoose.connect('mongodb://localhost:27017/camp', {
+const URI = process.env.MONGODB_URI
+mongoose.connect(URI, {
     useNewUrlParser: true,
     useCreateIndex: true,
     useUnifiedTopology: true,
@@ -36,15 +46,44 @@ process.env.NODE_ENV !== 'production' && app.use(morgan('dev'))
 const sessionConfig = {
     secret: 'secret',
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
+    store: new MongoStore({ mongooseConnection: mongoose.connection }),
     cookie: {
         maxAge: 1000 * 60 * 60 * 24 * 7,
-        sameSite: 'strict',
+        sameSite: 'lax',
     },
 }
 if (app.get('env') === 'production') sessionConfig.cookie.secure = true
 app.use(session(sessionConfig))
 app.use(flash())
+
+// passport
+app.use(passport.initialize())
+app.use(passport.session())
+passport.use(
+    new LocalStrategy({ usernameField: 'email' }, async (email, password, done) => {
+        try {
+            const user = await User.findOne({ email })
+            if (!user) return done(null, false, { message: 'Invalid email or password' })
+            if (!user.verified) {
+                return done(null, false, { message: 'You need to verify your email first' })
+            }
+            const match = await bcrypt.compare(password, user.password)
+            if (match) return done(null, user)
+            done(null, false, { message: 'Invalid email or password' })
+        } catch (e) {
+            done(e)
+        }
+    })
+)
+passport.serializeUser((user, done) => {
+    done(null, user.id)
+})
+passport.deserializeUser((id, done) => {
+    User.findById(id, (err, user) => {
+        done(err, user)
+    })
+})
 
 // flash messages
 app.use((req, res, next) => {
@@ -54,16 +93,16 @@ app.use((req, res, next) => {
 })
 
 // Routes
-app.get('/', (req, res) => res.render('home'))
-app.use('/campgrounds', campgrounds)
+app.use('/', usersRouter)
+app.use('/campgrounds', campgroundsRouter)
 // route parameters are scoped to each router, therefore the app params are not
 // accessible in reviews router unless we pass {mergeParams: true} when creating
 // reviews router to have access to app params
-app.use('/campgrounds/:id/reviews', reviews)
+app.use('/campgrounds/:id/reviews', reviewsRouter)
 
 // 404 Page
 app.all('*', (req, res, next) => {
-    next(new AppError(404, 'Page Not Found'))
+    throw new AppError(404, 'Page Not Found')
 })
 
 // Error Handling
