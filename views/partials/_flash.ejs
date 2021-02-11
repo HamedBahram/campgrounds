@@ -2,6 +2,9 @@
     <% success.forEach(msg => { %>
         <div class="alert alert-success alert-dismissible fade show" role="alert">
             <%= msg %> 
+            <% if (msg.match(/verify/)) { %>
+                <p class="fs-6 fw-lighter mb-0 mt-2 text-muted">Didn't receive email? <a class="link-success fs-6" href="/resend">Resend email</a></p>
+            <% } %>
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     <% }) %>
@@ -11,6 +14,9 @@
     <% error.forEach(msg => { %>
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
             <%= msg %> 
+            <% if (msg.match(/verify/)) { %>
+                <p class="fs-6 fw-lighter mb-0 mt-2">Didn't receive email? <a class="link-danger fs-6" href="/resend">Resend email</a></p>
+            <% } %>
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     <% }) %>

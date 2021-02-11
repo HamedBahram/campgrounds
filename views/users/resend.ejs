@@ -1,0 +1,26 @@
+<%- include('../partials/_header') %>
+
+<main class="container">
+    <div class="row">
+        <h2 class="text-center">Didn't receive email?</h2>
+        <p class="text-center fw-light text-muted mb-4">we can send it again</p>
+        <div class="col-6 mx-auto">
+            <%- include('../partials/_flash') %>
+            <form class="needs-validation mb-4" action="/resend" method="POST" novalidate>
+                <div class="mb-2">
+                    <input class="form-control" type="email" name="email" placeholder="Email" required>
+                    <div class="valid-feedback">Looks good!</div>
+                    <div class="invalid-feedback">Email is required</div>
+                </div>
+                <div class="d-grid gap-2">
+                    <button class="btn btn-outline-info" type="submit">Resend email</button>
+                </div>
+            </form>
+            <p class="my-0">Don't have an account? <a class="link-success" href="/register">Join now</a></p>
+            <a class="link-info text-decoration-none" href="#">Forgot your password?</a>
+        </div>
+    </div>
+
+</main>
+
+<%- include('../partials/_footer') %>

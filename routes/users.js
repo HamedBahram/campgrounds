@@ -1,93 +1,38 @@
 const express = require('express')
-const crypto = require('crypto')
 const passport = require('passport')
-const sgMail = require('@sendgrid/mail')
+const {
+    registerForm,
+    createNewUser,
+    loginForm,
+    login,
+    verifyEmail,
+    logout,
+    resendEmailForm,
+    resendVerificationEmail,
+} = require('../controllers/users')
+
 const router = express.Router()
-const User = require('../models/user')
 
 router.get('/', (req, res) => res.render('home'))
 
-router.get('/register', (req, res) => {
-    res.render('users/register')
-})
+router.get('/register', registerForm)
+router.post('/register', createNewUser)
 
-router.post('/register', async (req, res, next) => {
-    try {
-        const { email, password } = req.body
-        const registered = await User.findOne({ email })
-        if (registered) {
-            req.flash('error', 'A user with this email is already registered')
-            return res.redirect('/register')
-        }
-        const user = new User({
-            email,
-            email_token: crypto.randomBytes(64).toString('hex'),
-            verified: false,
-            password,
-        })
-        await user.save()
-        const msg = {
-            to: user.email,
-            from: {
-                email: 'info@nestzoom.com',
-                name: 'nest zoom',
-            },
-            template_id: process.env.SENDGRID_TEMP_ID,
-            dynamic_template_data: {
-                name: user.name,
-                email_token: user.email_token,
-            },
-        }
-        await sgMail.send(msg)
-        req.flash('success', 'please check you email to verify your account')
-        res.redirect('/login')
-    } catch (e) {
-        next(e)
-
-        // Instead of passing the error to the error handling middleware
-        // you can handle the error, flash a message and redirect here
-        // req.flash('error', e.message)
-        // res.redirect('/register')
-    }
-})
-
-router.get('/login', (req, res) => res.render('users/login'))
-
+router.get('/login', loginForm)
 router.post(
     '/login',
     passport.authenticate('local', {
         failureRedirect: '/login',
         failureFlash: true,
     }),
-    (req, res) => {
-        const redirectURL = req.session.redirectTo || '/'
-        delete req.session.redirectTo
-        res.redirect(redirectURL)
-    }
+    login
 )
 
-router.get('/verify', async (req, res, next) => {
-    try {
-        const { token } = req.query
-        const user = await User.findOne({ email_token: token })
-        if (!user) {
-            req.flash('error', 'Invalid verification Token')
-            req.redirect('/register')
-        }
-        user.email_token = undefined
-        user.verified = true
-        await user.save()
-        req.flash('success', 'Your email is verified, please log in')
-        res.redirect('/login')
-    } catch (e) {
-        next(e)
-    }
-})
+router.get('/verify', verifyEmail)
 
-router.get('/logout', (req, res) => {
-    req.logout()
-    req.flash('success', "You're Logged Out!")
-    res.redirect('/')
-})
+router.get('/resend', resendEmailForm)
+router.post('/resend', resendVerificationEmail)
+
+router.get('/logout', logout)
 
 module.exports = router

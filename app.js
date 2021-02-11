@@ -96,9 +96,6 @@ app.use((req, res, next) => {
 // Routes
 app.use('/', usersRouter)
 app.use('/campgrounds', campgroundsRouter)
-// route parameters are scoped to each router, therefore the app params are not
-// accessible in reviews router unless we pass {mergeParams: true} when creating
-// reviews router to have access to app params
 app.use('/campgrounds/:id/reviews', reviewsRouter)
 
 // 404 Page
@@ -115,4 +112,5 @@ app.use((err, req, res, next) => {
 })
 
 // Start Server
-app.listen(3000, () => console.log('serving on port 3000'))
+const port = process.env.PORT || 3000
+app.listen(port, () => console.log('serving on port 3000'))
