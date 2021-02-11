@@ -66,7 +66,7 @@ passport.use(
             const user = await User.findOne({ email })
             if (!user) return done(null, false, { message: 'Invalid email or password' })
             if (!user.verified) {
-                return done(null, false, { message: 'You need to verify your email first' })
+                return done(null, false, { message: 'Please check your inbox to verify your email first.' })
             }
             const match = await bcrypt.compare(password, user.password)
             if (match) return done(null, user)
@@ -87,6 +87,7 @@ passport.deserializeUser((id, done) => {
 
 // flash messages
 app.use((req, res, next) => {
+    res.locals.user = req.user
     res.locals.success = req.flash('success')
     res.locals.error = req.flash('error')
     next()
@@ -101,14 +102,15 @@ app.use('/campgrounds', campgroundsRouter)
 app.use('/campgrounds/:id/reviews', reviewsRouter)
 
 // 404 Page
-app.all('*', (req, res, next) => {
-    throw new AppError(404, 'Page Not Found')
-})
+// app.all('*', (req, res, next) => {
+//     throw new AppError(404, 'Page Not Found')
+// })
 
 // Error Handling
 app.use((err, req, res, next) => {
     const { statusCode = 500 } = err
     if (!err.message) err.message = 'Something went wrong'
+    console.log(err)
     res.status(statusCode).render('error', { err })
 })
 

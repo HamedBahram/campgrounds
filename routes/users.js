@@ -56,10 +56,14 @@ router.get('/login', (req, res) => res.render('users/login'))
 router.post(
     '/login',
     passport.authenticate('local', {
-        successRedirect: '/',
         failureRedirect: '/login',
         failureFlash: true,
-    })
+    }),
+    (req, res) => {
+        const redirectURL = req.session.redirectTo || '/'
+        delete req.session.redirectTo
+        res.redirect(redirectURL)
+    }
 )
 
 router.get('/verify', async (req, res, next) => {
@@ -78,6 +82,12 @@ router.get('/verify', async (req, res, next) => {
     } catch (e) {
         next(e)
     }
+})
+
+router.get('/logout', (req, res) => {
+    req.logout()
+    req.flash('success', "You're Logged Out!")
+    res.redirect('/')
 })
 
 module.exports = router

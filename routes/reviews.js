@@ -7,6 +7,8 @@ const AppError = require('../utils/AppError')
 const Campground = require('../models/campground')
 const Review = require('../models/review.model')
 const { reviewSchema } = require('../utils/joi_schemas')
+const isLoggedIn = require('../middleware/isLoggedIn')
+const isReviewOwner = require('../middleware/isReviewOwner')
 
 const validateReview = (req, res, next) => {
     const { error } = reviewSchema.validate(req.body)
@@ -14,11 +16,16 @@ const validateReview = (req, res, next) => {
     next()
 }
 
-router.post('/', validateReview, async (req, res) => {
+router.post('/', isLoggedIn, validateReview, async (req, res) => {
     try {
         const { id } = req.params
         const camp = await Campground.findById(id)
+        if (!camp) {
+            req.flash('error', 'Camp not found!')
+            return res.redirect('/campgrounds')
+        }
         const review = new Review(req.body.review)
+        review.user = req.user._id
         await review.save()
         camp.reviews.push(review)
         await camp.save()
@@ -29,7 +36,7 @@ router.post('/', validateReview, async (req, res) => {
     }
 })
 
-router.delete('/:reviewId', async (req, res) => {
+router.delete('/:reviewId', isLoggedIn, isReviewOwner, async (req, res) => {
     try {
         const { id, reviewId } = req.params
         await Review.findByIdAndDelete(reviewId)
