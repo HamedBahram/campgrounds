@@ -23,9 +23,11 @@ const campgroundController = {
     },
     createNewCamp: async (req, res, next) => {
         try {
-            const camp = new Campground(req.body.campground)
-            camp.user = req.user._id
-            camp.images = req.files.map(f => ({ url: f.path, filename: f.filename }))
+            const camp = new Campground({
+                ...req.body.campground,
+                user: req.user._id,
+                images: req.files.map(f => ({ url: f.path, filename: f.filename })),
+            })
             await camp.save()
             req.flash('success', 'New Camp was successfully created.')
             res.redirect(`/campgrounds/${camp._id}`)
@@ -43,20 +45,26 @@ const campgroundController = {
     },
     editCamp: async (req, res, next) => {
         try {
-            const { id } = req.params
-            const camp = await Campground.findByIdAndUpdate(id, req.body.campground, {
-                new: true,
-                runValidators: true,
-            })
-            const imgs = req.files.map(f => ({ url: f.path, filename: f.filename }))
-            camp.images.push(...imgs)
-            if (req.body.deleteImages) {
-                for (let filename of req.body.deleteImages) {
+            const { camp } = req
+            const newImages = req.files.map(f => ({ url: f.path, filename: f.filename }))
+            const { deleteImages } = req.body
+            let updatedImages
+            if (deleteImages) {
+                updatedImages = camp.images.filter(img => !deleteImages.includes(img.filename)).concat(newImages)
+                for (let filename of deleteImages) {
                     await cloudinary.uploader.destroy(filename)
                 }
-                await camp.updateOne({ $pull: { images: { filename: { $in: req.body.deleteImages } } } })
+            } else {
+                updatedImages = camp.images.concat(newImages)
             }
-            await camp.save()
+
+            await camp.updateOne({
+                ...req.body.campground,
+                images: updatedImages,
+            })
+            // to pull an element out of an array
+            // await camp.updateOne({ $pull: { images: { filename: { $in: req.body.deleteImages } } } })
+
             req.flash('success', 'Camp was successfully updated.')
             res.redirect(`/campgrounds/${camp._id}`)
         } catch (e) {
@@ -65,8 +73,8 @@ const campgroundController = {
     },
     deleteCamp: async (req, res, next) => {
         try {
-            const { id } = req.params
-            const camp = await Campground.findByIdAndDelete(id)
+            const { camp } = req
+            await camp.deleteOne()
             req.flash('success', 'Camp was successfully deleted')
             res.redirect('/campgrounds')
         } catch (e) {
