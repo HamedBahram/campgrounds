@@ -24,7 +24,20 @@ const seedDB = async () => {
         const camp = new Campground({
             user: '60256c02ccfa141a00b05e60',
             title: `${sample(descriptors)} ${sample(places)}`,
-            image: 'https://source.unsplash.com/collection/483251/800x450',
+            images: [
+                {
+                    url: 'https://source.unsplash.com/collection/483251/800x450',
+                    filename: 'path/filename_01',
+                },
+                {
+                    url: 'https://source.unsplash.com/collection/483251/799x450',
+                    filename: 'path/filename_02',
+                },
+                {
+                    url: 'https://source.unsplash.com/collection/483251/798x450',
+                    filename: 'path/filename_03',
+                },
+            ],
             price: Math.floor(Math.random() * 20) + 10,
             description:
                 'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Porro, debitis doloremque? Magnam reiciendis enim, aut ratione inventore voluptatem quo eos.',

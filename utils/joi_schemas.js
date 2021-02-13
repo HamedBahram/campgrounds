@@ -6,9 +6,15 @@ module.exports = {
             title: Joi.string().required(),
             location: Joi.string().required(),
             price: Joi.number().min(0).required(),
-            image: Joi.string().uri().required(),
+            // images: Joi.array().items(
+            //     Joi.object({
+            //         url: Joi.string().uri().required(),
+            //         filename: Joi.string().required(),
+            //     })
+            // ),
             description: Joi.string().required(),
         }).required(),
+        deleteImages: Joi.array(),
     }),
     reviewSchema: Joi.object({
         review: Joi.object({

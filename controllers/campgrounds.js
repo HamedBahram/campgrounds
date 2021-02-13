@@ -1,4 +1,5 @@
 const Campground = require('../models/campground')
+const { cloudinary } = require('../cloudinary')
 
 const campgroundController = {
     index: async (req, res, next) => {
@@ -24,6 +25,7 @@ const campgroundController = {
         try {
             const camp = new Campground(req.body.campground)
             camp.user = req.user._id
+            camp.images = req.files.map(f => ({ url: f.path, filename: f.filename }))
             await camp.save()
             req.flash('success', 'New Camp was successfully created.')
             res.redirect(`/campgrounds/${camp._id}`)
@@ -46,6 +48,15 @@ const campgroundController = {
                 new: true,
                 runValidators: true,
             })
+            const imgs = req.files.map(f => ({ url: f.path, filename: f.filename }))
+            camp.images.push(...imgs)
+            if (req.body.deleteImages) {
+                for (let filename of req.body.deleteImages) {
+                    await cloudinary.uploader.destroy(filename)
+                }
+                await camp.updateOne({ $pull: { images: { filename: { $in: req.body.deleteImages } } } })
+            }
+            await camp.save()
             req.flash('success', 'Camp was successfully updated.')
             res.redirect(`/campgrounds/${camp._id}`)
         } catch (e) {
