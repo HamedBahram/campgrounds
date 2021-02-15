@@ -5,8 +5,6 @@ const map = new mapboxgl.Map({
     center: camp.geometry.coordinates, // starting position [lng, lat]
     zoom: 12, // starting zoom
 })
-
-console.log(camp)
 // const marker = new mapboxgl.Marker().setLngLat(camp.geometry.coordinates).addTo(map)
 
 map.on('load', function () {
@@ -25,17 +23,7 @@ map.on('load', function () {
                         {
                             type: 'Feature',
                             properties: {
-                                description: `
-                                <div class="row">
-                                    <div class="col-4">
-                                        <img src=${camp.images[0].url} class="w-100" alt="">
-                                    </div>
-                                    <div class="col-8 pt-1">
-                                        <h6 class="m-0">${camp.title}</h6>
-                                        <p class="m-0">${camp.description}</p>
-                                        <a href="/campgrounds/${camp._id}" class="link-info">view camp</a>
-                                    </div>
-                                </div>`,
+                                popupHTML: camp.properties.popupHTML,
                             },
                             geometry: {
                                 type: 'Point',
@@ -72,7 +60,7 @@ map.on('load', function () {
         map.getCanvas().style.cursor = 'pointer'
 
         const coordinates = e.features[0].geometry.coordinates.slice()
-        const description = e.features[0].properties.description
+        const popupHTML = e.features[0].properties.popupHTML
 
         // Ensure that if the map is zoomed out such that multiple
         // copies of the feature are visible, the popup appears
@@ -83,7 +71,7 @@ map.on('load', function () {
 
         // Populate the popup and set its coordinates
         // based on the feature found.
-        popup.setLngLat(coordinates).setHTML(description).addTo(map)
+        popup.setLngLat(coordinates).setHTML(popupHTML).addTo(map)
     })
 
     // map.on('mouseleave', 'places', function () {

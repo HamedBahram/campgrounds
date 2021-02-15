@@ -2,6 +2,7 @@
 
 <main class="container">
     <%- include('../partials/_flash') %>
+    <div id="map" style="height: 500px;"></div>
     <h1 class="mb-4">All Campgrounds</h1>
     <% campgrounds.forEach(camp => { %>
     <div class="card mb-3">
@@ -25,3 +26,10 @@
 </main>
 
 <%- include('../partials/_footer') %>
+
+<script>
+    const campgrounds = { features: <%- JSON.stringify(campgrounds) %> }
+</script>
+<script src="/js/clusterMap.js"></script>
+
+<%- include('../partials/_closing') %>
