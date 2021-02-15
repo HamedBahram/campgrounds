@@ -3,8 +3,8 @@
     <main class="container">
         <div class="row">
             <h1 class="text-center mb-4">New Campground</h1>
-            <div class="col-6 mx-auto">
-                <form class="needs-validation" action="/campgrounds" method="POST" novalidate enctype="multipart/form-data">
+            <div class="col-md-6 mx-auto">
+                <form class="needs-validation mb-4" action="/campgrounds" method="POST" novalidate enctype="multipart/form-data">
                     <div class="mb-2">
                         <input class="form-control" type="text" name="campground[title]" placeholder="Add a title" required>
                         <div class="valid-feedback">Looks good!</div>
@@ -20,12 +20,7 @@
                         <input type="text" class="form-control" name="campground[price]" placeholder="Price" required>
                         <div class="valid-feedback">Looks good!</div>
                         <div class="invalid-feedback">Please add a price.</div>
-                      </div>
-                    <!-- <div class="mb-2">
-                        <input class="form-control" type="text" name="campground[image]" placeholder="Image URL" required>
-                        <div class="valid-feedback">Looks good!</div>
-                        <div class="invalid-feedback">Please provide an image URL.</div>
-                    </div> -->
+                    </div>
                     <div class="mb-2">
                         <input class="form-control" type="file" name="images" required multiple>
                         <div class="valid-feedback">Looks good!</div>
@@ -36,9 +31,9 @@
                         <div class="valid-feedback">Looks good!</div>
                         <div class="invalid-feedback">Please add a description.</div>
                     </div>
-                    <button class="btn btn-success mb-2" type="submit">Add Campground</button>
+                    <button class="btn btn-success" type="submit">Add Campground</button>
+                    <a class="btn btn-outline-secondary" href="/campgrounds">Cancel</a>
                 </form>
-                <a class="btn btn-light" href="/campgrounds">Cancel</a>
             </div>
         </div>
     </main>

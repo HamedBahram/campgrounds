@@ -6,6 +6,19 @@ const map = new mapboxgl.Map({
     zoom: 3,
 })
 
+// Add zoom and rotation controls to the map.
+map.addControl(new mapboxgl.NavigationControl())
+
+// Add geolocate control to the map.
+map.addControl(
+    new mapboxgl.GeolocateControl({
+        positionOptions: {
+            enableHighAccuracy: true,
+        },
+        trackUserLocation: true,
+    })
+)
+
 map.on('load', function () {
     // Add a new source from our GeoJSON data and
     // set the 'cluster' option to true. GL-JS will

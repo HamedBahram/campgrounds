@@ -3,11 +3,11 @@
 <main class="container">
     <div class="row">
         <h1 class="text-center mb-4">Register</h1>
-        <div class="col-6 mx-auto">
+        <div class="col-md-6 mx-auto">
             <%- include('../partials/_flash') %>
             <form class="needs-validation mb-4" action="/register" method="POST" novalidate>
                 <div class="mb-2">
-                    <input class="form-control" type="email" name="email" placeholder="Email" required>
+                    <input class="form-control" type="email" name="email" placeholder="Email" autofocus required>
                     <div class="valid-feedback">Looks good!</div>
                     <div class="invalid-feedback">Please enter a valid email</div>
                 </div>

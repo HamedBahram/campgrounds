@@ -7,6 +7,19 @@ const map = new mapboxgl.Map({
 })
 // const marker = new mapboxgl.Marker().setLngLat(camp.geometry.coordinates).addTo(map)
 
+// Add zoom and rotation controls to the map.
+map.addControl(new mapboxgl.NavigationControl())
+
+// Add geolocate control to the map.
+map.addControl(
+    new mapboxgl.GeolocateControl({
+        positionOptions: {
+            enableHighAccuracy: true,
+        },
+        trackUserLocation: true,
+    })
+)
+
 map.on('load', function () {
     map.loadImage(
         'http://localhost:3000/imgs/home-red.png',
