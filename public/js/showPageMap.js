@@ -6,11 +6,12 @@ const map = new mapboxgl.Map({
     zoom: 12, // starting zoom
 })
 
+console.log(camp)
 // const marker = new mapboxgl.Marker().setLngLat(camp.geometry.coordinates).addTo(map)
 
 map.on('load', function () {
     map.loadImage(
-        'https://docs.mapbox.com/mapbox-gl-js/assets/custom_marker.png',
+        'http://localhost:3000/imgs/home-red.png',
         // Add an image to use as a custom marker
         function (error, image) {
             if (error) throw error
@@ -24,7 +25,17 @@ map.on('load', function () {
                         {
                             type: 'Feature',
                             properties: {
-                                description: `<strong>${camp.title}</strong><p>${camp.description}</p>`,
+                                description: `
+                                <div class="row">
+                                    <div class="col-4">
+                                        <img src=${camp.images[0].url} class="w-100" alt="">
+                                    </div>
+                                    <div class="col-8 pt-1">
+                                        <h6 class="m-0">${camp.title}</h6>
+                                        <p class="m-0">${camp.description}</p>
+                                        <a href="/campgrounds/${camp._id}" class="link-info">view camp</a>
+                                    </div>
+                                </div>`,
                             },
                             geometry: {
                                 type: 'Point',
@@ -50,11 +61,13 @@ map.on('load', function () {
 
     // Create a popup, but don't add it to the map yet.
     const popup = new mapboxgl.Popup({
-        closeButton: false,
-        closeOnClick: false,
+        closeButton: true,
+        closeOnClick: true,
     })
 
     map.on('mouseenter', 'places', function (e) {
+        if (popup.isOpen()) return
+
         // Change the cursor style as a UI indicator.
         map.getCanvas().style.cursor = 'pointer'
 
@@ -73,8 +86,8 @@ map.on('load', function () {
         popup.setLngLat(coordinates).setHTML(description).addTo(map)
     })
 
-    map.on('mouseleave', 'places', function () {
-        map.getCanvas().style.cursor = ''
-        popup.remove()
-    })
+    // map.on('mouseleave', 'places', function () {
+    //     map.getCanvas().style.cursor = ''
+    //     popup.remove()
+    // })
 })
