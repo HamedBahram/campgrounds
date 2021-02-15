@@ -61,7 +61,7 @@ const campgroundSchema = new Schema(
 
 campgroundSchema.virtual('properties.popupHTML').get(function () {
     return `
-    <div class="row">
+    <div class="row g-2">
         <div class="col-6">
             <img src=${this.images[0].thumbnail} class="w-100" alt="">
         </div>
