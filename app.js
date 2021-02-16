@@ -6,6 +6,7 @@ const path = require('path')
 const methodOverride = require('method-override')
 const AppError = require('./utils/AppError')
 const mongoose = require('mongoose')
+const mongoSanitize = require('express-mongo-sanitize')
 const session = require('express-session')
 const MongoStore = require('connect-mongo')(session)
 const flash = require('connect-flash')
@@ -44,6 +45,7 @@ app.use(express.static(path.join(__dirname, 'public')))
 app.use(express.urlencoded({ extended: true }))
 app.use(methodOverride('_method'))
 process.env.NODE_ENV !== 'production' && app.use(morgan('dev'))
+app.use(mongoSanitize())
 
 const sessionConfig = {
     secret: 'secret',
