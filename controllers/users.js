@@ -103,7 +103,7 @@ const usersController = {
     logout: (req, res) => {
         req.logout()
         req.flash('success', "You're Logged Out!")
-        res.redirect('/')
+        res.redirect('/login')
     },
 }
 
