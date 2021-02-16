@@ -7,6 +7,7 @@ const methodOverride = require('method-override')
 const AppError = require('./utils/AppError')
 const mongoose = require('mongoose')
 const mongoSanitize = require('express-mongo-sanitize')
+const helmet = require('helmet')
 const session = require('express-session')
 const MongoStore = require('connect-mongo')(session)
 const flash = require('connect-flash')
@@ -61,6 +62,54 @@ if (app.get('env') === 'production') sessionConfig.cookie.secure = true
 app.use(session(sessionConfig))
 app.use(flash())
 
+// helmet
+app.use(helmet())
+const scriptSrcUrls = [
+    'https://stackpath.bootstrapcdn.com/',
+    'https://api.tiles.mapbox.com/',
+    'https://api.mapbox.com/',
+    'https://kit.fontawesome.com/',
+    'https://cdnjs.cloudflare.com/',
+    'https://cdn.jsdelivr.net',
+]
+const styleSrcUrls = [
+    'https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css',
+    'https://kit-free.fontawesome.com/',
+    'https://stackpath.bootstrapcdn.com/',
+    'https://api.mapbox.com/',
+    'https://api.tiles.mapbox.com/',
+    'https://fonts.googleapis.com/',
+    'https://use.fontawesome.com/',
+]
+const connectSrcUrls = [
+    'https://api.mapbox.com/',
+    'https://a.tiles.mapbox.com/',
+    'https://b.tiles.mapbox.com/',
+    'https://events.mapbox.com/',
+]
+const fontSrcUrls = []
+app.use(
+    helmet.contentSecurityPolicy({
+        directives: {
+            defaultSrc: [],
+            connectSrc: ["'self'", ...connectSrcUrls],
+            scriptSrc: ["'unsafe-inline'", "'self'", ...scriptSrcUrls],
+            styleSrc: ["'self'", "'unsafe-inline'", ...styleSrcUrls],
+            workerSrc: ["'self'", 'blob:'],
+            objectSrc: [],
+            imgSrc: [
+                "'self'",
+                'blob:',
+                'data:',
+                'https://res.cloudinary.com/dtijo8xha/',
+                'https://images.unsplash.com/',
+                'https://source.unsplash.com/',
+            ],
+            fontSrc: ["'self'", ...fontSrcUrls],
+        },
+    })
+)
+
 // passport
 app.use(passport.initialize())
 app.use(passport.session())
@@ -70,7 +119,9 @@ passport.use(
             const user = await User.findOne({ email })
             if (!user) return done(null, false, { message: 'Invalid email or password' })
             if (!user.verified) {
-                return done(null, false, { message: 'Please check your inbox to verify your email first.' })
+                return done(null, false, {
+                    message: 'Please check your inbox to verify your email first.',
+                })
             }
             const match = await bcrypt.compare(password, user.password)
             if (match) return done(null, user)

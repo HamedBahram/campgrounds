@@ -1,8 +1,8 @@
 {
     "rest-client.fontSize": 10,
-    "prettier.printWidth": 200,
     "prettier.tabWidth": 4,
     "prettier.disableLanguages": [
         "html"
-    ]
+    ],
+    "prettier.printWidth": 100
 }
