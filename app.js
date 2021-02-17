@@ -52,9 +52,9 @@ if (process.env.NODE_ENV !== 'production') {
 app.use(mongoSanitize())
 
 const sessionConfig = {
-    secret: 'secret',
+    secret: process.env.SESSION_SECRET,
     resave: false,
-    saveUninitialized: false,
+    saveUninitialized: true,
     store: new MongoStore({ mongooseConnection: mongoose.connection }),
     cookie: {
         maxAge: 1000 * 60 * 60 * 24 * 7,
