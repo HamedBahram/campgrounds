@@ -1,4 +1,5 @@
-mapboxgl.accessToken = 'pk.eyJ1IjoiaGFtZWRiYWhyYW0iLCJhIjoiY2tjdDlnMjUzMTgzNDJzcGd4Zm83Z2J1bCJ9.juhm08o9kmVhpxfsdBTekg'
+mapboxgl.accessToken =
+    'pk.eyJ1IjoiaGFtZWRiYWhyYW0iLCJhIjoiY2tjdDlnMjUzMTgzNDJzcGd4Zm83Z2J1bCJ9.juhm08o9kmVhpxfsdBTekg'
 const map = new mapboxgl.Map({
     container: 'map', // container ID
     style: 'mapbox://styles/mapbox/dark-v10', // style URL
@@ -22,7 +23,7 @@ map.addControl(
 
 map.on('load', function () {
     map.loadImage(
-        'http://localhost:3000/imgs/home-red.png',
+        'https://project-camp.herokuapp.com/imgs/home-red.png',
         // Add an image to use as a custom marker
         function (error, image) {
             if (error) throw error
