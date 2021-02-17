@@ -1,9 +1,10 @@
-mapboxgl.accessToken = 'pk.eyJ1IjoiaGFtZWRiYWhyYW0iLCJhIjoiY2tjdDlnMjUzMTgzNDJzcGd4Zm83Z2J1bCJ9.juhm08o9kmVhpxfsdBTekg'
+mapboxgl.accessToken =
+    'pk.eyJ1IjoiaGFtZWRiYWhyYW0iLCJhIjoiY2tjdDlnMjUzMTgzNDJzcGd4Zm83Z2J1bCJ9.juhm08o9kmVhpxfsdBTekg'
 const map = new mapboxgl.Map({
     container: 'map',
     style: 'mapbox://styles/mapbox/dark-v10',
-    center: [-103.59179687498357, 40.66995747013945],
-    zoom: 3,
+    center: [-79.3849, 43.6529],
+    zoom: 5,
 })
 
 // Add zoom and rotation controls to the map.
@@ -44,7 +45,15 @@ map.on('load', function () {
             //   * Blue, 20px circles when point count is less than 100
             //   * Yellow, 30px circles when point count is between 100 and 750
             //   * Pink, 40px circles when point count is greater than or equal to 750
-            'circle-color': ['step', ['get', 'point_count'], '#51bbd6', 10, '#f1f075', 50, '#f28cb1'],
+            'circle-color': [
+                'step',
+                ['get', 'point_count'],
+                '#51bbd6',
+                10,
+                '#f1f075',
+                50,
+                '#f28cb1',
+            ],
             'circle-radius': ['step', ['get', 'point_count'], 20, 10, 30, 50, 40],
         },
     })
