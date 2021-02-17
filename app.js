@@ -11,7 +11,6 @@ const helmet = require('helmet')
 const session = require('express-session')
 const MongoStore = require('connect-mongo')(session)
 const flash = require('connect-flash')
-const morgan = require('morgan')
 const passport = require('passport')
 const LocalStrategy = require('passport-local')
 const bcrypt = require('bcrypt')
@@ -45,7 +44,11 @@ app.set('view engine', 'ejs')
 app.use(express.static(path.join(__dirname, 'public')))
 app.use(express.urlencoded({ extended: true }))
 app.use(methodOverride('_method'))
-process.env.NODE_ENV !== 'production' && app.use(morgan('dev'))
+if (process.env.NODE_ENV !== 'production') {
+    const morgan = require('morgan')
+    app.use(morgan('dev'))
+}
+
 app.use(mongoSanitize())
 
 const sessionConfig = {
