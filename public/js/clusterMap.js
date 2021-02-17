@@ -4,7 +4,7 @@ const map = new mapboxgl.Map({
     container: 'map',
     style: 'mapbox://styles/mapbox/dark-v10',
     center: [-79.3849, 43.6529],
-    zoom: 10,
+    zoom: 8,
 })
 
 // Add zoom and rotation controls to the map.
