@@ -11,9 +11,6 @@ const userSchema = new Schema({
     },
     email_token: {
         type: String,
-        required: function () {
-            return !this.verified
-        },
     },
     reset_token: {
         type: String,
