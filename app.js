@@ -58,10 +58,10 @@ const sessionConfig = {
     store: new MongoStore({ mongooseConnection: mongoose.connection }),
     cookie: {
         maxAge: 1000 * 60 * 60 * 24 * 7,
-        // sameSite: 'lax',
+        sameSite: 'lax',
     },
 }
-if (app.get('env') === 'production') sessionConfig.cookie.secure = true
+// if (app.get('env') === 'production') sessionConfig.cookie.secure = true
 app.use(session(sessionConfig))
 app.use(flash())
 
