@@ -1,5 +1,6 @@
 const express = require('express')
 const passport = require('passport')
+const validateUser = require('../middleware/validateUser')
 const sanitizeEmail = require('../middleware/sanitizeEmail')
 const validateEmail = require('../middleware/validateEmail')
 const {
@@ -18,7 +19,7 @@ const router = express.Router()
 router.get('/', (req, res) => res.render('home'))
 
 router.get('/register', registerForm)
-router.post('/register', sanitizeEmail, validateEmail, createNewUser)
+router.post('/register', validateUser, sanitizeEmail, validateEmail, createNewUser)
 
 router.get('/login', loginForm)
 router.post(
