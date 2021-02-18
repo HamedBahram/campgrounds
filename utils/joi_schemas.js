@@ -22,4 +22,8 @@ module.exports = {
             body: Joi.string().required(),
         }).required(),
     }),
+    userSchema: Joi.object({
+        email: Joi.string().email().required(),
+        password: Joi.string().required(),
+    }),
 }
