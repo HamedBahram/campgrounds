@@ -17,7 +17,7 @@ const router = express.Router()
 router.get('/', (req, res) => res.render('home'))
 
 router.get('/register', registerForm)
-router.post('/register', sanitize, createNewUser)
+router.post('/register', createNewUser)
 
 router.get('/login', loginForm)
 router.post(
