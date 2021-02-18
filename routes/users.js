@@ -1,5 +1,6 @@
 const express = require('express')
 const passport = require('passport')
+const sanitize = require('../middleware/sanitizeHTML')
 const {
     registerForm,
     createNewUser,
@@ -16,7 +17,7 @@ const router = express.Router()
 router.get('/', (req, res) => res.render('home'))
 
 router.get('/register', registerForm)
-router.post('/register', createNewUser)
+router.post('/register', sanitize, createNewUser)
 
 router.get('/login', loginForm)
 router.post(
