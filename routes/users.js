@@ -24,6 +24,7 @@ router.post('/register', validateUser, sanitizeEmail, validateEmail, createNewUs
 router.get('/login', loginForm)
 router.post(
     '/login',
+    validateUser,
     sanitizeEmail,
     validateEmail,
     passport.authenticate('local', {
