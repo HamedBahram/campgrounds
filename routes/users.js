@@ -1,6 +1,7 @@
 const express = require('express')
 const passport = require('passport')
-const sanitize = require('../middleware/sanitizeHTML')
+const sanitizeEmail = require('../middleware/sanitizeEmail')
+const validateEmail = require('../middleware/validateEmail')
 const {
     registerForm,
     createNewUser,
@@ -17,11 +18,13 @@ const router = express.Router()
 router.get('/', (req, res) => res.render('home'))
 
 router.get('/register', registerForm)
-router.post('/register', createNewUser)
+router.post('/register', sanitizeEmail, validateEmail, createNewUser)
 
 router.get('/login', loginForm)
 router.post(
     '/login',
+    sanitizeEmail,
+    validateEmail,
     passport.authenticate('local', {
         failureRedirect: '/login',
         failureFlash: true,

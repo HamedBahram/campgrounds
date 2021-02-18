@@ -167,7 +167,7 @@ app.use('/campgrounds/:id/reviews', reviewsRouter)
 app.use((err, req, res, next) => {
     const { statusCode = 500 } = err
     if (!err.message) err.message = 'Something went wrong'
-    console.log(err)
+    console.error(err)
     res.status(statusCode).render('error', { err })
 })
 

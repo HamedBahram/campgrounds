@@ -1,9 +1,9 @@
 const sanitizeHTML = require('sanitize-html')
 
 const sanitize = (req, res, next) => {
-    const body = req.body
-    for (let key in body) {
-        body[key] = sanitizeHTML(body[key], {
+    const review = req.body.review
+    for (let key in review) {
+        review[key] = sanitizeHTML(review[key], {
             allowedTags: [],
             allowedAttributes: {},
         })

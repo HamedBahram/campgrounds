@@ -10,8 +10,10 @@ const reviewsController = {
                 req.flash('error', 'Camp not found!')
                 return res.redirect('/campgrounds')
             }
-            const review = new Review(req.body.review)
-            review.user = req.user._id
+            const review = new Review({
+                ...req.body.review,
+                user: req.user._id,
+            })
             await review.save()
             camp.reviews.push(review)
             await camp.save()
