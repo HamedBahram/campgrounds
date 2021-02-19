@@ -25,9 +25,9 @@ const usersController = {
                 to: user.email,
                 from: {
                     email: 'info@nestzoom.com',
-                    name: 'nest zoom',
+                    name: 'nest zoom team',
                 },
-                template_id: process.env.SENDGRID_TEMP_ID,
+                template_id: process.env.SENDGRID_EMAIL_VERIFY_TEMP_ID,
                 dynamic_template_data: {
                     name: user.name,
                     email_token: user.email_token,
@@ -43,6 +43,80 @@ const usersController = {
             // you can handle the error, flash a message and redirect here
             // req.flash('error', e.message)
             // res.redirect('/register')
+        }
+    },
+    pwdResetRequestForm: (req, res) => {
+        res.render('users/forgot')
+    },
+    sendResetEmail: async (req, res, next) => {
+        try {
+            const { email } = req.body
+            const user = await User.findOne({ email })
+            if (!user) {
+                req.flash('error', 'This email is not associated with any account')
+                return res.redirect('/forgot')
+            }
+            if (user.reset_token && user.reset_token_expiry > Date.now()) {
+                req.flash('success', "We've already emailed you a link to reset your password")
+                return res.redirect('/success')
+            }
+            user.reset_token = crypto.randomBytes(64).toString('hex')
+            user.reset_token_expiry = Date.now() + 1000 * 60 * 60 * 24 // 24 hr
+            await user.save()
+            const msg = {
+                to: user.email,
+                from: {
+                    email: 'info@nestzoom.com',
+                    name: 'nest zoom team',
+                },
+                template_id: process.env.SENDGRID_PWD_RESET_TEMP_ID,
+                dynamic_template_data: {
+                    reset_token: user.reset_token,
+                },
+            }
+            await sgMail.send(msg)
+            req.flash(
+                'success',
+                "We've emailed you a link to reset your password, the link is only valid for 24 hours."
+            )
+            res.redirect('/success')
+        } catch (e) {
+            next(e)
+        }
+    },
+    pwdResetForm: (req, res) => {
+        const reset_token = req.query.reset_token || req.session.reset_token
+        delete req.session.reset_token
+        res.render('users/reset', { reset_token })
+    },
+    resetPassword: async (req, res, next) => {
+        try {
+            const { reset_token, password, confirm_password } = req.body
+            if (password !== confirm_password) {
+                req.flash('error', 'Passwords do not match')
+                req.session.reset_token = reset_token
+                return res.redirect('/reset')
+            }
+            const user = await User.findOne({ reset_token })
+            if (!user) {
+                req.flash(
+                    'error',
+                    'Token is invalid, please click on the link in your email again or submit a new request'
+                )
+                return res.redirect('/error')
+            }
+            if (!(user.reset_token_expiry > Date.now())) {
+                req.flash('error', 'Your token has expired, please submit a new request')
+                return res.redirect('/forgot')
+            }
+            user.password = password
+            user.reset_token = undefined
+            user.reset_token_expiry = undefined
+            await user.save()
+            req.flash('success', 'Your password has been updated, please log in')
+            res.redirect('/login')
+        } catch (e) {
+            next(e)
         }
     },
     loginForm: (req, res) => {

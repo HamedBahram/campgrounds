@@ -12,11 +12,17 @@ const {
     logout,
     resendEmailForm,
     resendVerificationEmail,
+    pwdResetRequestForm,
+    sendResetEmail,
+    pwdResetForm,
+    resetPassword,
 } = require('../controllers/users')
 
 const router = express.Router()
 
 router.get('/', (req, res) => res.render('home'))
+router.get('/success', (req, res) => res.render('success'))
+router.get('/error', (req, res) => res.render('error'))
 
 router.get('/register', registerForm)
 router.post('/register', validateUser, sanitizeEmail, validateEmail, createNewUser)
@@ -38,6 +44,12 @@ router.get('/verify', verifyEmail)
 
 router.get('/resend', resendEmailForm)
 router.post('/resend', resendVerificationEmail)
+
+router.get('/forgot', pwdResetRequestForm)
+router.post('/forgot', sanitizeEmail, validateEmail, sendResetEmail)
+
+router.get('/reset', pwdResetForm)
+router.post('/reset', resetPassword)
 
 router.get('/logout', logout)
 

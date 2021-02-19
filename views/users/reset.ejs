@@ -2,27 +2,29 @@
 
 <main class="container">
     <div class="row">
-        <h1 class="text-center mb-4">Login</h1>
+        <h1 class="text-center mb-4">Reset Password</h1>
         <div class="col-md-6 mx-auto">
             <%- include('../partials/_flash') %>
+            <p class="text-center text-success mb-4">Choose a new password</p>
             <% if (!user) { %>
-                <form class="needs-validation mb-4" action="/login" method="POST" novalidate>
+                <form class="needs-validation mb-4" action="/reset" method="POST" novalidate>
                     <div class="mb-2">
-                        <input class="form-control" type="email" name="email" placeholder="Email" autofocus required>
-                        <div class="valid-feedback">Looks good!</div>
-                        <div class="invalid-feedback">Email is required</div>
+                        <input class="form-control" type="hidden" name="reset_token" value="<%= reset_token %>">
                     </div>
                     <div class="mb-2">
-                        <input class="form-control" type="password" name="password" placeholder="Password" required>
+                        <input class="form-control" type="password" name="password" placeholder="New password" autofocus required>
                         <div class="valid-feedback">Looks good!</div>
                         <div class="invalid-feedback">Password is required</div>
                     </div>
+                    <div class="mb-2">
+                        <input class="form-control" type="password" name="confirm_password" placeholder="Confirm password" required>
+                        <div class="valid-feedback">Looks good!</div>
+                        <div class="invalid-feedback">Confirm your password</div>
+                    </div>
                     <div class="d-grid gap-2">
-                        <button class="btn btn-outline-info" type="submit">Login</button>
+                        <button class="btn btn-outline-primary" type="submit">Update Password</button>
                     </div>
                 </form>
-                <p class="my-0">Don't have an account? <a class="link-success" href="/register">Join now</a></p>
-                <a class="link-info text-decoration-none" href="/forgot">Forgot your password?</a>
             <% } else { %>
                 <div class="alert alert-warning" role="alert">
                     You are currently logged in as <strong><%= user.email %></strong>
