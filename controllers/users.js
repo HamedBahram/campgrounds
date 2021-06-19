@@ -161,7 +161,7 @@ const usersController = {
                     email: 'info@nestzoom.com',
                     name: 'nest zoom',
                 },
-                template_id: process.env.SENDGRID_TEMP_ID,
+                template_id: process.env.SENDGRID_EMAIL_VERIFY_TEMP_ID,
                 dynamic_template_data: {
                     name: user.name,
                     email_token: user.email_token,

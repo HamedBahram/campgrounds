@@ -1,7 +1,10 @@
 const sanitizeHTML = require('sanitize-html')
 
 const sanitizeEmail = (req, res, next) => {
-    sanitizeHTML(req.body.email)
+    req.body.email = sanitizeHTML(req.body.email, {
+        allowedTags: [],
+        allowedAttributes: {},
+    })
     next()
 }
 

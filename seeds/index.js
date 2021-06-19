@@ -1,11 +1,11 @@
-const e = require('express')
+require('dotenv').config({ path: '../.env' })
 const mongoose = require('mongoose')
 const Campground = require('../models/campground')
 const cities = require('./cities')
 const { places, descriptors } = require('./seedHelpers')
 
 // Database
-mongoose.connect('mongodb://localhost:27017/camp', {
+mongoose.connect(process.env.MONGODB_URI, {
     useNewUrlParser: true,
     useCreateIndex: true,
     useUnifiedTopology: true,
@@ -22,24 +22,25 @@ const seedDB = async () => {
     for (let i = 0; i < 300; i++) {
         const random = Math.floor(Math.random() * 1000)
         const camp = new Campground({
-            user: '60256c02ccfa141a00b05e60',
+            user: '60ce1227be0e10001599844b',
             title: `${sample(descriptors)} ${sample(places)}`,
             images: [
                 {
-                    url: 'https://source.unsplash.com/collection/483251/800x450',
+                    url: `https://source.unsplash.com/collection/483251/${400 + i}x450`,
                     filename: 'path/filename_01',
                 },
                 {
-                    url: 'https://source.unsplash.com/collection/483251/799x450',
+                    url: `https://source.unsplash.com/collection/483251/${399 + i}x450`,
                     filename: 'path/filename_02',
                 },
                 {
-                    url: 'https://source.unsplash.com/collection/483251/798x450',
+                    url: `https://source.unsplash.com/collection/483251/${398 + i}x450`,
                     filename: 'path/filename_03',
                 },
             ],
             price: Math.floor(Math.random() * 20) + 10,
-            description: 'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Porro, debitis doloremque? Magnam reiciendis enim, aut ratione inventore voluptatem quo eos.',
+            description:
+                'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Porro, debitis doloremque? Magnam reiciendis enim, aut ratione inventore voluptatem quo eos.',
             location: `${cities[random].city}, ${cities[random].state}`,
             geometry: {
                 type: 'Point',

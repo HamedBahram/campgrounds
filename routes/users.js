@@ -43,7 +43,7 @@ router.post(
 router.get('/verify', verifyEmail)
 
 router.get('/resend', resendEmailForm)
-router.post('/resend', resendVerificationEmail)
+router.post('/resend', sanitizeEmail, validateEmail, resendVerificationEmail)
 
 router.get('/forgot', pwdResetRequestForm)
 router.post('/forgot', sanitizeEmail, validateEmail, sendResetEmail)

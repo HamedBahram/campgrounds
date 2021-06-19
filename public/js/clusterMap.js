@@ -3,8 +3,8 @@ mapboxgl.accessToken =
 const map = new mapboxgl.Map({
     container: 'map',
     style: 'mapbox://styles/mapbox/dark-v10',
-    center: [-79.3849, 43.6529],
-    zoom: 8,
+    center: [-103.59179687498357, 40.66995747013945],
+    zoom: 10,
 })
 
 // Add zoom and rotation controls to the map.
