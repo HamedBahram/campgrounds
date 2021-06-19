@@ -25,7 +25,7 @@ const usersController = {
                 to: user.email,
                 from: {
                     email: 'info@nestzoom.com',
-                    name: 'nest zoom team',
+                    name: 'campground team',
                 },
                 template_id: process.env.SENDGRID_EMAIL_VERIFY_TEMP_ID,
                 dynamic_template_data: {
@@ -67,7 +67,7 @@ const usersController = {
                 to: user.email,
                 from: {
                     email: 'info@nestzoom.com',
-                    name: 'nest zoom team',
+                    name: 'campground team',
                 },
                 template_id: process.env.SENDGRID_PWD_RESET_TEMP_ID,
                 dynamic_template_data: {
