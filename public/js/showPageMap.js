@@ -23,7 +23,7 @@ map.addControl(
 
 map.on('load', function () {
     map.loadImage(
-        'https://project-camp.herokuapp.com/imgs/home-red.png',
+        'https://project-camp.herokuapp.com/imgs/place.png',
         // Add an image to use as a custom marker
         function (error, image) {
             if (error) throw error
